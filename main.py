@@ -8,6 +8,7 @@ from llama_index.core.tools import QueryEngineTool, ToolMetadata
 from llama_index.core.agent import ReActAgent
 from llama_index.llms import openai
 from prompts import context
+from pdf import nepal_engine
 os.environ["OPENAI_API_KEY"] = get_key(find_dotenv(), "OPENAI_API_KEY")
 
 
@@ -29,6 +30,13 @@ tools = [
         metadata=ToolMetadata(
             name="population_data",
             description="This gives the imformation about the world opulation and demographics",
+        )
+    ),
+    QueryEngineTool(
+        query_engine=nepal_engine,
+        metadata=ToolMetadata(
+            name="nepal_data",
+            description="This gives detailed information about Nepal the country",
         )
     )
 ]
