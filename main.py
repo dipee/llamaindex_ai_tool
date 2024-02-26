@@ -6,7 +6,8 @@ from prompts import new_prompt, instruction_str
 from note_engine import note_engine
 from llama_index.core.tools import QueryEngineTool, ToolMetadata
 from llama_index.core.agent import ReActAgent
-from llama_index.llms import OpenAI
+from llama_index.llms import openai
+from prompts import context
 os.environ["OPENAI_API_KEY"] = get_key(find_dotenv(), "OPENAI_API_KEY")
 
 
@@ -26,8 +27,15 @@ tools = [
     QueryEngineTool(
         query_engine=population_query_engine,
         metadata=ToolMetadata(
-            name="population_query",
-            description="Query the population of a country"
+            name="population_data",
+            description="This gives the imformation about the world opulation and demographics",
         )
     )
 ]
+
+llm = openai.OpenAI(model="gpt-3.5-turbo-0613")
+agent = ReActAgent.from_tools(llm=llm, tools=tools, verbose=True, context=context)
+
+while (prompt := input("Enter a prompt q to (quit): ")) != "q":
+    result = agent.query(prompt)
+    print(result)
